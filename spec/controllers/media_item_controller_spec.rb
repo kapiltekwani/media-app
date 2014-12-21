@@ -41,6 +41,7 @@ describe MediaItemsController, :type => 'controller' do
       expect(response).to redirect_to(media_items_path)
       expect(assigns(:media_item)).not_to be_new_record
       expect(assigns(:media_item)).not_to be_nil
+      expect(assigns(:media_item).errors.full_messages).to be_empty
     end
 
     it "should not create a new media-item record when name field is blank" do
@@ -49,6 +50,7 @@ describe MediaItemsController, :type => 'controller' do
       expect(response).to render_template('media_items/new')
       expect(assigns(:media_item)).to be_new_record
       expect(assigns(:media_item)).not_to be_nil
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
     end
 
     it "should not create a new media-item record when url field is blank" do
@@ -57,6 +59,7 @@ describe MediaItemsController, :type => 'controller' do
       expect(response).to render_template('media_items/new')
       expect(assigns(:media_item)).to be_new_record
       expect(assigns(:media_item)).not_to be_nil
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
     end
 
     it "should not create a new media-item record when user_id field is blank" do
@@ -65,6 +68,7 @@ describe MediaItemsController, :type => 'controller' do
       expect(response).to render_template('media_items/new')
       expect(assigns(:media_item)).to be_new_record
       expect(assigns(:media_item)).not_to be_nil
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
     end
   end
 
@@ -87,11 +91,42 @@ describe MediaItemsController, :type => 'controller' do
   end
 
   context "on invoke of update method" do
-    it "should update the media-item instance and redirect to media_item#index" do
+    it "should update the media-item instance and redirect to media_item#index on successful save" do
       media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
       put :update, {:id => media_item.id, :media_item => {:name => "APPLIFT", :url => "www.applift.com", :user_id => @user.id}}
       expect(response.status).to eq(302)
       expect(response).to redirect_to(media_items_path)
+      expect(assigns(:media_item).errors.full_messages).to be_empty
+      expect(assigns(:media_item)).not_to be_new_record
+      expect(assigns(:media_item)).not_to be_nil
+    end
+
+    it "should render edit page with error messages on unsuccessful update when name is blank" do
+      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
+      put :update, {:id => media_item.id, :media_item => {:name => "", :url => "www.applift.com", :user_id => @user.id}}
+      expect(response.status).to eq(200)
+      expect(response).to render_template('media_items/edit')
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
+      expect(assigns(:media_item)).not_to be_new_record
+      expect(assigns(:media_item)).not_to be_nil
+    end
+
+    it "should render edit page with error messages on unsuccessful update when url  is blank" do
+      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
+      put :update, {:id => media_item.id, :media_item => {:name => "APPLIFT", :url => "", :user_id => @user.id}}
+      expect(response.status).to eq(200)
+      expect(response).to render_template('media_items/edit')
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
+      expect(assigns(:media_item)).not_to be_new_record
+      expect(assigns(:media_item)).not_to be_nil
+    end
+
+    it "should render edit page with error messages on unsuccessful update when user_id is blank" do
+      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
+      put :update, {:id => media_item.id, :media_item => {:name => "APPLIFT", :url => "www.applift.com", :user_id => ""}}
+      expect(response.status).to eq(200)
+      expect(response).to render_template('media_items/edit')
+      expect(assigns(:media_item).errors.full_messages).not_to be_empty
       expect(assigns(:media_item)).not_to be_new_record
       expect(assigns(:media_item)).not_to be_nil
     end

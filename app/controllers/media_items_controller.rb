@@ -25,7 +25,7 @@ class MediaItemsController < ApplicationController
 
   def update
     @media_item = MediaItem.find(params[:id])
-    if @media.update_attributes(params[:media_item])
+    if @media_item.update_attributes(params[:media_item])
       flash[:success] = "Media Item updated successfully"
       redirect_to media_items_path
     else
