@@ -1,0 +1,23 @@
+.row-fluid{:style => 'padding-bottom:5px'}
+  %h4
+    List Of Media-Items
+    = link_to "Add Media-Item", new_media_item_path, :class => 'btn btn-primary',:style => 'float:right'
+.row-fluid
+  %table.table.table-striped.table-condensed.table-bordered#guest
+    %thead
+      %th.span3
+        Media-Item Name
+      %th.span3
+        Media-Item Link
+      %th.span4
+        Actions
+    %tbody
+      = render :partial => 'media_item', :collection => @media_items
+  .share_menu_item_modal
+:javascript
+  $('#guest').dataTable({
+  "sPaginationType": "full_numbers",
+  "aLengthMenu": [10,20,50],
+  "iDisplayLength": 50
+  });
+

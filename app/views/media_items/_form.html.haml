@@ -1,0 +1,8 @@
+= simple_form_for @media_item, :html => {:class => 'form-horizontal'} do |f|
+  .control-group
+    = f.input :name, :label => 'Media-Item Name'
+    = f.input :url, :label => 'Media-Item Link'
+    = f.hidden_field :user_id, :value => current_user.id
+  .controls
+    = f.button :submit, :class => 'btn btn-primary', :value => "Create Media-Item"
+    = link_to "Cancel", media_items_path, :class => 'btn'

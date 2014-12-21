@@ -1,0 +1,8 @@
+%tr
+  %td= media_item.name
+  %td= media_item.url
+  %td
+    = link_to "Edit Media-Item", edit_media_item_path(media_item), :class => 'btn btn-primary'
+    = link_to "Delete Media-Item", media_item_path(media_item), :class => 'btn btn-danger', :method => :delete
+    = link_to "New Media-Item", new_media_item_path(media_item), :class => 'btn btn-success'
+    = link_to "Share Media-Item", media_item_share_media_item_path(media_item), :class => 'btn btn-info', :remote => true
