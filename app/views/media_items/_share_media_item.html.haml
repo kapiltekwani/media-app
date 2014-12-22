@@ -5,9 +5,9 @@
       = "Select the users to share the item."
   .modal-body
     = form_tag media_item_add_users_to_media_item_path(@media_item) do
-      = select_tag :user_ids, options_for_select([["kapil", 1], ["kamal",2]]), :multiple => true, :id => 'user_ids', :width => "200px"
+      = select_tag :user_ids, options_for_select(@unshared_users), :multiple => true, :id => 'user_ids', :width => "200px"
       = submit_tag "Submit Form", :class => 'btn btn-primary'
       %button{:class => 'btn btn-danger close_modal', :"data-dismiss" => 'modal', "data-url" => "#"}
         Close
 :javascript
-  $('#user_ids').select2({placeholder: "Please enter the email addresses"});
+  //$('#user_ids').select2({placeholder: "Please enter the email addresses"});

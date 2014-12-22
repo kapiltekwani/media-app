@@ -80,14 +80,6 @@ describe MediaItemsController, :type => 'controller' do
       expect(response).to render_template('media_items/edit')
       expect(assigns(:media_item)).not_to be_new_record
     end
-
-    it "should render media_item/index with actual media-item instance if does not exits" do
-      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
-      get :edit, {:id => media_item.id}
-      expect(response.status).to eq(200)
-      expect(response).to render_template('media_items/edit')
-      expect(assigns(:media_item)).to be_nil
-    end
   end
 
   context "on invoke of update method" do
@@ -138,6 +130,35 @@ describe MediaItemsController, :type => 'controller' do
       delete :destroy, {:id => media_item.id }
       expect(response.status).to eq(302)
       expect(MediaItem.find_by_id(media_item.id)).to be_nil
+    end
+  end
+
+  context "on invoke of share_media_item method" do
+    it "should show the pop-up with list of users with whom media-item can be shared" do
+      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
+      xhr :get, :share_media_item, {:media_item_id => media_item.id}
+
+      expect(response.status).to eq(200)
+      expect(response).to render_template('media_items/share_media_item')
+      expect(assigns(:media_item)).not_to be_new_record
+      expect(assigns(:media_item)).not_to be_nil
+    end
+  end
+
+  context "on invoke of add_users_to_media_item" do
+    it "should create association records in media_item_users to map which media-item is shared with which user" do
+      media_item = FactoryGirl.create(:media_item, :user_id => @user.id)
+      @user1 = FactoryGirl.create(:user)
+      @user2 = FactoryGirl.create(:user)
+      @user3 = FactoryGirl.create(:user)
+
+      get :add_users_to_media_item, {:media_item_id => media_item.id, :user_ids => [@user1.id, @user2.id]}
+      expect(MediaItemUser.count).to eq(2)
+      expect(@user1.shared_media_items.count).to eq(1)
+      expect(@user2.shared_media_items.count).to eq(1)
+      expect(@user3.shared_media_items.count).to eq(0)
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to(media_items_path)
     end
   end
 end

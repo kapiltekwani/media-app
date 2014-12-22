@@ -1,4 +1,7 @@
 class MediaItem < ActiveRecord::Base
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
   attr_accessible :name, :url, :user_id
 
   #Associations

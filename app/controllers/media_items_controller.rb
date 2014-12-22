@@ -1,7 +1,9 @@
 class MediaItemsController < ApplicationController
   before_filter :authenticate_user!
+
   def index
-    @media_items  = MediaItem.all
+    @media_items  = current_user.media_items
+    @shared_media_items = current_user.shared_media_items.where("media_items.user_id NOT IN (?)", current_user.id)
   end
 
   def new
@@ -40,11 +42,15 @@ class MediaItemsController < ApplicationController
       flash[:success] = "Media Item deleted successfully"
       redirect_to media_items_path
     else
+      flash[:warning] = "Something gone wrong while deleting the media-item"
+      redirect_to media_items_path
     end
   end
 
   def share_media_item
     @media_item = MediaItem.find(params[:media_item_id])
+    shared_user_ids = MediaItemUser.where(media_item_id: @media_item.id).collect(&:user_id)
+    @unshared_users = User.where("id NOT IN (?)", (shared_user_ids << @media_item.user_id)).collect{|x| [x.username, x.id] }
     render 'share_media_item'
   end
 

@@ -1,7 +1,7 @@
 .row-fluid{:style => 'padding-bottom:5px'}
   %h4
     List Of Media-Items
-    = link_to "Add Media-Item", new_media_item_path, :class => 'btn btn-primary',:style => 'float:right'
+    = link_to "Add Media-Item", new_media_item_path, :class => 'btn btn-success',:style => 'float:right'
 .row-fluid
   %table.table.table-striped.table-condensed.table-bordered#guest
     %thead
@@ -13,6 +13,7 @@
         Actions
     %tbody
       = render :partial => 'media_item', :collection => @media_items
+      = render :partial => 'shared_media_item', :collection => @shared_media_items
   .share_menu_item_modal
 :javascript
   $('#guest').dataTable({
